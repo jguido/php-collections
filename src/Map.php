@@ -122,6 +122,7 @@ class Map
     /**
      * @param $key
      * @return array
+     * @deprecated Experimental, should not be used in production environment
      */
     public function groupBy($key)
     {
