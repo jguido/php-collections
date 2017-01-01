@@ -150,9 +150,6 @@ class MapTest extends \PHPUnit_Framework_TestCase
         self::assertCount(1 , $groupedMap['60']->all());
         self::assertCount(1 , $groupedMap['70']->all());
         self::assertCount(1 , $groupedMap['80']->all());
-
-
-
     }
 
 }
