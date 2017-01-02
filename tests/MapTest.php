@@ -6,7 +6,7 @@ namespace Tests\Collection;
 
 use Collection\Map;
 use Tests\Collection\Fixture\Builder\DatasetBuilder;
-use Tests\Collection\Fixture\Set;
+use Tests\Collection\Fixture\Set as TestSet;
 use Tests\Collection\Fixture\SimpleDataset;
 
 class MapTest extends \PHPUnit_Framework_TestCase
@@ -84,16 +84,44 @@ class MapTest extends \PHPUnit_Framework_TestCase
         self::assertNull($map->get(0));
     }
 
+//    public function testFilterWithBigSetOfData()
+//    {
+//        $dataset = new SimpleDataset(1000000);
+//        $datasetData = $dataset->getDataset();
+//        $map = new Map($datasetData);
+//        $filter = [];
+//        $method = function() use ($map, &$filter){
+//
+//            $set1 = new TestSet('test', 'test', 66);
+//            $set2 = new TestSet('test', 'test', 67);
+//            $set3 = new TestSet('test', 'test', 68);
+//            $set4 = new TestSet('test', 'test', 69);
+//            $set5 = new TestSet('test', 'test', 70);
+//            $map->add($set1);
+//            $map->add($set2);
+//            $map->add($set3);
+//            $map->add($set4);
+//            $map->add($set5);
+//            $filter = $map->filter(['age' => function ($a) {
+//                return $a->getAge() > 65;
+//            }]);
+//        };
+//        Monitor::monitor($method);
+//
+//        self::assertCount(5, $filter);
+//    }
+
     public function testFilterByMethodShouldReturnTheSetCorrespondingToTheGivenFilterSet()
     {
         $dataset = new SimpleDataset(10);
         $datasetData = $dataset->getDataset();
         $map = new Map($datasetData);
+
         $simpleSet = self::buildOneValidDataset()[0];
         $map->add($simpleSet);
         $sets = new SimpleDataset(1);
         $set = $sets->getDataset()[0];
-        $set1 = new Set('test', 'test', 20);
+        $set1 = new TestSet('test', 'test', 20);
         $map->add($set);
         $map->add($set1);
 
@@ -104,9 +132,9 @@ class MapTest extends \PHPUnit_Framework_TestCase
     {
         $simpleDataset = new SimpleDataset(10);
         $dataset = $simpleDataset->getDataset();
-        $baby = new Set('baby', 'baby', 1);
+        $baby = new TestSet('baby', 'baby', 1);
         $dataset[] = $baby;
-        $elder = new Set('elder', 'elder', 99);
+        $elder = new TestSet('elder', 'elder', 99);
         $dataset[] = $elder;
 
         $map = new Map($dataset);
@@ -119,9 +147,9 @@ class MapTest extends \PHPUnit_Framework_TestCase
     {
         $simpleDataset = new SimpleDataset(10);
         $dataset = $simpleDataset->getDataset();
-        $baby = new Set('baby', 'baby', 1);
+        $baby = new TestSet('baby', 'baby', 1);
         $dataset[] = $baby;
-        $elder = new Set('elder', 'elder', 99);
+        $elder = new TestSet('elder', 'elder', 99);
         $dataset[] = $elder;
 
         $map = new Map($dataset);

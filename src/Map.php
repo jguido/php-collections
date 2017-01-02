@@ -4,15 +4,15 @@
 namespace Collection;
 
 
-use Collection\Domain\BaseCollection;
+use Collection\Domain\{Collection, CollectionInterface};
 
-class Map extends BaseCollection {
+class Map extends Collection {
 
     /**
      * @param $set
-     * @return $this
+     * @return $this|CollectionInterface
      */
-    public function add($set)
+    public function add($set) :CollectionInterface
     {
         if (is_object($set)) {
             $this->dataset[spl_object_hash($set)] = $set;
@@ -37,22 +37,24 @@ class Map extends BaseCollection {
 
     /**
      * @param $key
-     * @return $this
+     * @return $this|CollectionInterface
      */
-    public function delete($key)
+    public function delete($key) :CollectionInterface
     {
         if (is_object($key)) {
             $key = spl_object_hash($key);
         }
 
-        return parent::delete($key);
+        parent::delete($key);
+
+        return $this;
     }
 
     /**
      * @param array $filterData
      * @return array
      */
-    public function filter(array $filterData)
+    public function filter(array $filterData) :array
     {
         $filteredDataset = $this->all();
         if (count($filterData) > 0) {
@@ -68,8 +70,9 @@ class Map extends BaseCollection {
     /**
      * @param $key
      * @param string $direction
+     * @return array
      */
-    public function sort($key, $direction = self::SORT_ASCENDING)
+    public function sort($key, $direction = self::SORT_ASCENDING) :array
     {
         usort($this->dataset, function($a, $b) use ($key, $direction){
             $getter = 'get'.ucfirst($key);
@@ -81,6 +84,8 @@ class Map extends BaseCollection {
                 return $this->compare($a, $b, $direction);
             }
         });
+
+        return $this->dataset;
     }
 
     /**
@@ -88,7 +93,7 @@ class Map extends BaseCollection {
      * @return array
      * @deprecated Experimental, should not be used in production environment
      */
-    public function groupBy($key)
+    public function groupBy($key) :array
     {
         if (is_object($key)) {
             $key = spl_object_hash($key);

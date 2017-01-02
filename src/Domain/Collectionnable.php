@@ -55,12 +55,13 @@ trait Collectionnable
      * @param $direction
      * @return int
      */
-    protected function compare($a, $b, $direction = self::SORT_ASCENDING)
+    protected function compare($a, $b, $direction = self::SORT_ASCENDING): int
     {
         if ($a == $b) {
             return 0;
         }
         switch ($direction) {
+            default:
             case self::SORT_ASCENDING:
                 return $a < $b ? -1 : 1;
                 break;
@@ -76,7 +77,7 @@ trait Collectionnable
      * @return array
      * @todo manage subset for each tuple of data
      */
-    protected function buildSubset($key, $set)
+    protected function buildSubset($key, $set): array
     {
         $subset = [];
         $getter = 'get' . ucfirst($key);

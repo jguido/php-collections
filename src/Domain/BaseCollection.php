@@ -26,22 +26,39 @@ abstract class BaseCollection implements CollectionInterface
         }
     }
 
-    public function all()
+    /**
+     * @return array
+     */
+    public function all() :array
     {
         return $this->dataset;
     }
 
-    public function add($set)
+    /**
+     * @param $set
+     * @return CollectionInterface
+     */
+    public function add($set) :CollectionInterface
     {
         $this->dataset[$this->getAnEmptyIndex()] = $set;
+
+        return $this;
     }
 
+    /**
+     * @param $key
+     * @return mixed|null
+     */
     public function get($key)
     {
         return array_key_exists($key, $this->dataset) ? $this->dataset[$key] : null;
     }
 
-    public function delete($key)
+    /**
+     * @param $key
+     * @return CollectionInterface
+     */
+    public function delete($key) :CollectionInterface
     {
         if (count($this->dataset) > 0) {
             $tmpDataset = [];
@@ -56,7 +73,11 @@ abstract class BaseCollection implements CollectionInterface
         return $this;
     }
 
-    public function filter(array $filterData)
+    /**
+     * @param array $filterData
+     * @return array
+     */
+    public function filter(array $filterData) :array
     {
         $filteredDataset = $this->all();
         if (count($filterData) > 0) {
@@ -72,8 +93,9 @@ abstract class BaseCollection implements CollectionInterface
     /**
      * @param $key
      * @param string $direction
+     * @return array
      */
-    public function sort($key, $direction = self::SORT_ASCENDING)
+    public function sort($key, $direction = self::SORT_ASCENDING) :array
     {
         usort($this->dataset, function ($a, $b) use ($key, $direction) {
             $getter = 'get' . ucfirst($key);
@@ -85,14 +107,17 @@ abstract class BaseCollection implements CollectionInterface
                 return $this->compare($a, $b, $direction);
             }
         });
+
+        return $this->dataset;
     }
 
     /**
      * @param $key
      * @return array
+     * @throws \Exception
      * @deprecated Experimental, should not be used in production environment
      */
-    public function groupBy($key)
+    public function groupBy($key) :array
     {
         Throw new \Exception("Not yet implemented");
     }
@@ -112,6 +137,8 @@ abstract class BaseCollection implements CollectionInterface
     {
         return end($this->dataset);
     }
+
+    abstract function __clone();
 
 
 }

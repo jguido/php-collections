@@ -2,9 +2,9 @@
 
 namespace Collection;
 
-use Collection\Domain\BaseCollection;
+use Collection\Domain\Collection;
 
-class Set extends BaseCollection
+class Set extends Collection
 {
 
 }

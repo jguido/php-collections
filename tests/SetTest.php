@@ -11,6 +11,7 @@ use Tests\Collection\Fixture\SimpleDataset;
 
 class SetTest extends \PHPUnit_Framework_TestCase
 {
+
     use DatasetBuilder;
 
     public function testMapShouldReturnTheDatasetGivenInConstructor()

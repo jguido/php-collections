@@ -124,11 +124,11 @@ trait DatasetBuilder
     /**
      * @return array
      */
-    private static function buildOneValidDataset()
+    private static function buildOneValidDataset() :array
     {
         $dataset = [];
         $person = new Person();
-        foreach (range(0, 10) as $i) {
+        for($i = 0 ; $i <= 10 ; $i++) {
             $dataset[] = $person->name();
         }
 
