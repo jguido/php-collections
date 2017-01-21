@@ -1,5 +1,7 @@
 # PHP Collections API
 
+[![Build Status](https://travis-ci.org/jguido/php-collections.svg?branch=master)](https://travis-ci.org/jguido/php-collections)
+
 ## Map
 A Map will contain tuples of data indexed by a hash (if tuple is an object) or by a numerical index based on the next numerical free index.
 ### __construct
