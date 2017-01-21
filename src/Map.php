@@ -4,20 +4,22 @@
 namespace Collection;
 
 
-use Collection\Domain\{Collection, CollectionInterface};
+use Collection\Domain\{
+    BaseCollection, CollectionInterface
+};
 
-class Map extends Collection {
+class Map extends BaseCollection  {
 
     /**
      * @param $set
      * @return $this|CollectionInterface
      */
-    public function add($set) :CollectionInterface
+    public function add($set, $key) :CollectionInterface
     {
-        if (is_object($set)) {
-            $this->dataset[spl_object_hash($set)] = $set;
+        if (is_object($key)) {
+            $this->dataset[spl_object_hash($key)] = $set;
         } else {
-            parent::add($set);
+            parent::add($set, $key);
         }
 
         return $this;
@@ -52,9 +54,9 @@ class Map extends Collection {
 
     /**
      * @param array $filterData
-     * @return array
+     * @return CollectionInterface
      */
-    public function filter(array $filterData) :array
+    public function filter(array $filterData) :CollectionInterface
     {
         $filteredDataset = $this->all();
         if (count($filterData) > 0) {
@@ -64,17 +66,23 @@ class Map extends Collection {
         }
 
 
-        return $filteredDataset;
+        return new Map($filteredDataset);
     }
 
     /**
      * @param $key
      * @param string $direction
-     * @return array
+     * @return CollectionInterface
      */
-    public function sort($key, $direction = self::SORT_ASCENDING) :array
+    public function sort($key, $direction = self::SORT_ASCENDING) :CollectionInterface
     {
-        usort($this->dataset, function($a, $b) use ($key, $direction){
+        $sortedData = (clone $this)->all();
+
+        if (count($sortedData) <= 0) {
+            return new Map($sortedData);
+        }
+        $data = $this->flatten($sortedData);
+        usort($data, function($a, $b) use ($key, $direction){
             $getter = 'get'.ucfirst($key);
             if (method_exists($a, $getter) && method_exists($b, $getter)) {
                 return $this->compare($a->$getter(), $b->$getter(), $direction);
@@ -85,50 +93,54 @@ class Map extends Collection {
             }
         });
 
-        return $this->dataset;
+        return new Map($data);
     }
 
     /**
      * @param $key
-     * @return array
-     * @deprecated Experimental, should not be used in production environment
+     * @return CollectionInterface
      */
-    public function groupBy($key) :array
+    public function groupBy($key) :CollectionInterface
     {
-        if (is_object($key)) {
-            $key = spl_object_hash($key);
+        $groupedMap = new Map();
+        if (count($this->dataset) <= 0) {
+            return $groupedMap;
         }
-        $groupedDataset = [];
-        if (count($this->dataset) > 0) {
-            foreach ($this->dataset as $keyOfDataset => $set) {
-                if (is_object($set)) {
+
+        foreach ($this->dataset as $hash => $set) {
+            if (is_array($set)) {
+                array_map(function ($el) use ($key, &$groupedMap) {
                     $getter = 'get' . ucfirst($key);
-                    if (method_exists($set, $getter)) {
-                        if (is_array($set->$getter()) && count($set->$getter()) > 0) {
-                            foreach ($set->$getter() as $subSet) {
-                                $groupedDataset[spl_object_hash($subSet)][] = new Map($subSet);
-                            }
-                        } else {
-                            $groupedDataset[$set->$getter()][] = $set;
-                        }
+                    if (is_object($el) && method_exists($el, $getter)) {
+                        $groupedMap->add($el, $el->$getter());
                     }
-
-                } else if (is_array($set) && array_key_exists($key, $set)) {
-                    $groupedDataset[$set[$key]][] = $set;
+                }, $set);
+            } else {
+                $getter = 'get' . ucfirst($key);
+                if (is_object($set) && method_exists($set, $getter)) {
+                    $groupedMap->add([$set], $set->$getter());
                 }
             }
-            $tmpGroupedDataset = [];
-            foreach ($groupedDataset as $a => $dataset) {
-                if ($dataset instanceof Map) {
-                    $tmpGroupedDataset[$a] = $dataset;
-                } else {
-                    $tmpGroupedDataset[$a] = new Map($dataset);
-                }
-            }
-            $groupedDataset = $tmpGroupedDataset;
         }
 
-        return $groupedDataset;
+        return $groupedMap;
     }
 
+    /**
+     * @return CollectionInterface
+     */
+    function __clone()
+    {
+        return new Map($this->dataset);
+    }
+
+    /**
+     * @param \Closure $map
+     * @return array
+     */
+    public function map(\Closure $map): array
+    {
+        $data = $this->flatten($this->all());
+        return array_map($map, $data);
+    }
 }

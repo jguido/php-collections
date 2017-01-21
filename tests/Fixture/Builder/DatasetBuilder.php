@@ -77,61 +77,47 @@ trait DatasetBuilder
         $person39 = new Set("persone39", "persone39", 70);
         $person40 = new Set("persone40", "persone40", 80);
         $map = new Map();
-        $map->add($person1);
-        $map->add($person2);
-        $map->add($person3);
-        $map->add($person4);
-        $map->add($person5);
-        $map->add($person6);
-        $map->add($person7);
-        $map->add($person8);
-        $map->add($person9);
-        $map->add($person10);
-        $map->add($person11);
-        $map->add($person12);
-        $map->add($person13);
-        $map->add($person14);
-        $map->add($person15);
-        $map->add($person16);
-        $map->add($person17);
-        $map->add($person18);
-        $map->add($person19);
-        $map->add($person20);
-        $map->add($person21);
-        $map->add($person22);
-        $map->add($person23);
-        $map->add($person24);
-        $map->add($person25);
-        $map->add($person26);
-        $map->add($person27);
-        $map->add($person28);
-        $map->add($person29);
-        $map->add($person30);
-        $map->add($person31);
-        $map->add($person32);
-        $map->add($person33);
-        $map->add($person34);
-        $map->add($person35);
-        $map->add($person36);
-        $map->add($person37);
-        $map->add($person38);
-        $map->add($person39);
-        $map->add($person40);
+        $map->add($person1 , md5(microtime()));
+        $map->add($person2 , md5(microtime()));
+        $map->add($person3 , md5(microtime()));
+        $map->add($person4 , md5(microtime()));
+        $map->add($person5 , md5(microtime()));
+        $map->add($person6 , md5(microtime()));
+        $map->add($person7 , md5(microtime()));
+        $map->add($person8 , md5(microtime()));
+        $map->add($person9 , md5(microtime()));
+        $map->add($person10, md5(microtime()));
+        $map->add($person11, md5(microtime()));
+        $map->add($person12, md5(microtime()));
+        $map->add($person13, md5(microtime()));
+        $map->add($person14, md5(microtime()));
+        $map->add($person15, md5(microtime()));
+        $map->add($person16, md5(microtime()));
+        $map->add($person17, md5(microtime()));
+        $map->add($person18, md5(microtime()));
+        $map->add($person19, md5(microtime()));
+        $map->add($person20, md5(microtime()));
+        $map->add($person21, md5(microtime()));
+        $map->add($person22, md5(microtime()));
+        $map->add($person23, md5(microtime()));
+        $map->add($person24, md5(microtime()));
+        $map->add($person25, md5(microtime()));
+        $map->add($person26, md5(microtime()));
+        $map->add($person27, md5(microtime()));
+        $map->add($person28, md5(microtime()));
+        $map->add($person29, md5(microtime()));
+        $map->add($person30, md5(microtime()));
+        $map->add($person31, md5(microtime()));
+        $map->add($person32, md5(microtime()));
+        $map->add($person33, md5(microtime()));
+        $map->add($person34, md5(microtime()));
+        $map->add($person35, md5(microtime()));
+        $map->add($person36, md5(microtime()));
+        $map->add($person37, md5(microtime()));
+        $map->add($person38, md5(microtime()));
+        $map->add($person39, md5(microtime()));
+        $map->add($person40, md5(microtime()));
 
         return $map;
-    }
-
-    /**
-     * @return array
-     */
-    private static function buildOneValidDataset() :array
-    {
-        $dataset = [];
-        $person = new Person();
-        for($i = 0 ; $i <= 10 ; $i++) {
-            $dataset[] = $person->name();
-        }
-
-        return $dataset;
     }
 }

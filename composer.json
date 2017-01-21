@@ -2,6 +2,7 @@
   "name": "jguido/php-collections",
   "license": "BSD-2.0",
   "type": "library",
+  "description": "Collection feature for php",
   "autoload": {
     "psr-4": {
       "Collection\\": "src/",

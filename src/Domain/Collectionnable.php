@@ -29,15 +29,16 @@ trait Collectionnable
     protected function applyFilterTo(array $filteredDataset, $key, $filter)
     {
         if ($filter instanceof \Closure) {
-            return array_filter($filteredDataset, function ($el) use ($key, $filter) {
+            return $this->postFilter(array_filter($filteredDataset, function ($el) use ($key, $filter) {
                 $getter = 'get' . ucfirst($key);
+
                 if (method_exists($el, $getter)) {
 
                     return $filter($el);
                 } else {
-                    return [];
+                    return false;
                 }
-            });
+            }));
         } else {
             return array_filter($filteredDataset, function($el)use($key, $filter){
                 if (is_array($el) && array_key_exists($key, $el)) {
@@ -47,6 +48,26 @@ trait Collectionnable
                 }
             });
         }
+    }
+
+    /**
+     * @param array $dataset
+     * @return array
+     */
+    private function postFilter(array $dataset)
+    {
+        $postFilterDataset = [];
+        if (count($dataset) <= 0) {
+            return [];
+        }
+
+        foreach ($dataset as $hash => $set) {
+            if (count($set) > 0) {
+                $postFilterDataset[$hash] = $set;
+            }
+        }
+
+        return $postFilterDataset;
     }
 
     /**
@@ -69,30 +90,5 @@ trait Collectionnable
                 return $a < $b ? 1 : -1;
                 break;
         }
-    }
-
-    /**
-     * @param $key
-     * @param $set
-     * @return array
-     * @todo manage subset for each tuple of data
-     */
-    protected function buildSubset($key, $set): array
-    {
-        $subset = [];
-        $getter = 'get' . ucfirst($key);
-        if (method_exists($set, $getter)) {
-            if (is_array($set->$getter()) && count($set->$getter()) > 0) {
-                foreach ($set->$getter() as $subDataset) {
-                    $subset[spl_object_hash($subset)][] = new Map($subDataset);
-                }
-
-                return $subset;
-            } else {
-                $subset[$set->$getter()][] = $set;
-            }
-        }
-
-        return $subset;
     }
 }

@@ -21,7 +21,20 @@ abstract class BaseCollection implements CollectionInterface
         $this->dataset = [];
         if (is_array($dataset) && count($dataset) > 0) {
             foreach ($dataset as $set) {
-                $this->add($set);
+                if (is_object($set)) {
+                    $key = spl_object_hash($set);
+                } elseif (is_array($set)) {
+                    if (count($set) > 0) {
+                        $key = spl_object_hash($set[0]);
+                    } else {
+                        $key = false;
+                    }
+                } else {
+                    $key = $set;
+                }
+                if ($key && $set) {
+                    $this->add($set, $key);
+                }
             }
         }
     }
@@ -36,11 +49,22 @@ abstract class BaseCollection implements CollectionInterface
 
     /**
      * @param $set
+     * @param $key
      * @return CollectionInterface
      */
-    public function add($set) :CollectionInterface
+    public function add($set, $key) :CollectionInterface
     {
-        $this->dataset[$this->getAnEmptyIndex()] = $set;
+        $key = !empty($key) ? $key : $this->getAnEmptyIndex();
+        if (!array_key_exists($key, $this->dataset)) {
+            $this->dataset[$key] = $set;
+        } else {
+            if (!is_array($this->dataset[$key])) {
+                $tmp = $this->dataset[$key];
+                $this->dataset[$key] = [];
+                $this->dataset[$key][] = $tmp;
+            }
+            $this->dataset[$key][] = $set;
+        }
 
         return $this;
     }
@@ -64,7 +88,7 @@ abstract class BaseCollection implements CollectionInterface
             $tmpDataset = [];
             foreach ($this->dataset as $keyOfSet => $set) {
                 if ($key !== $keyOfSet) {
-                    $tmpDataset[$keyOfSet] = $set;
+                    $tmpDataset[$keyOfSet][] = $set;
                 }
             }
             $this->dataset = $tmpDataset;
@@ -72,56 +96,6 @@ abstract class BaseCollection implements CollectionInterface
 
         return $this;
     }
-
-    /**
-     * @param array $filterData
-     * @return array
-     */
-    public function filter(array $filterData) :array
-    {
-        $filteredDataset = $this->all();
-        if (count($filterData) > 0) {
-            foreach ($filterData as $key => $filter) {
-                $filteredDataset = $this->applyFilterTo($filteredDataset, $key, $filter);
-            }
-        }
-
-
-        return $filteredDataset;
-    }
-
-    /**
-     * @param $key
-     * @param string $direction
-     * @return array
-     */
-    public function sort($key, $direction = self::SORT_ASCENDING) :array
-    {
-        usort($this->dataset, function ($a, $b) use ($key, $direction) {
-            $getter = 'get' . ucfirst($key);
-            if (method_exists($a, $getter) && method_exists($b, $getter)) {
-                return $this->compare($a->$getter(), $b->$getter(), $direction);
-            } else if (is_array($a) && is_array($b) && array_key_exists($key, $a) && array_key_exists($key, $b)) {
-                return $this->compare($a[$key], $b[$key], $direction);
-            } else {
-                return $this->compare($a, $b, $direction);
-            }
-        });
-
-        return $this->dataset;
-    }
-
-    /**
-     * @param $key
-     * @return array
-     * @throws \Exception
-     * @deprecated Experimental, should not be used in production environment
-     */
-    public function groupBy($key) :array
-    {
-        Throw new \Exception("Not yet implemented");
-    }
-
     /**
      * @return mixed
      */
@@ -138,7 +112,16 @@ abstract class BaseCollection implements CollectionInterface
         return end($this->dataset);
     }
 
-    abstract function __clone();
+    /**
+     * @param array $array
+     * @return array
+     */
+    protected function flatten(array $array) {
+        $return = array();
+        array_walk_recursive($array, function($a) use (&$return) { $return[] = $a; });
+
+        return $return;
+    }
 
 
 }

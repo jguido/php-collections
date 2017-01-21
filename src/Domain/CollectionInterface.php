@@ -14,9 +14,10 @@ interface CollectionInterface
 
     /**
      * @param $set
+     * @param $key
      * @return CollectionInterface
      */
-    public function add($set) :CollectionInterface;
+    public function add($set, $key) :CollectionInterface;
 
     /**
      * @param $key
@@ -32,22 +33,28 @@ interface CollectionInterface
 
     /**
      * @param array $filterData
+     * @return CollectionInterface
+     */
+    public function filter(array $filterData) :CollectionInterface;
+
+    /**
+     * @param \Closure $map
      * @return array
      */
-    public function filter(array $filterData) :array;
+    public function map(\Closure $map) : array;
 
     /**
      * @param $key
      * @param string $direction
-     * @return array
+     * @return CollectionInterface
      */
-    public function sort($key, $direction = self::SORT_ASCENDING) :array;
+    public function sort($key, $direction = self::SORT_ASCENDING) :CollectionInterface;
 
     /**
      * @param $key
-     * @return array
+     * @return CollectionInterface
      */
-    public function groupBy($key) :array;
+    public function groupBy($key) :CollectionInterface;
 
     /**
      * @return mixed
@@ -58,4 +65,9 @@ interface CollectionInterface
      * @return mixed
      */
     public function last();
+
+    /**
+     * @return CollectionInterface
+     */
+    function __clone();
 }
