@@ -1,6 +1,6 @@
 # PHP Collections API
 
-[![Build Status](https://travis-ci.org/jguido/php-collections.svg?branch=master)](https://travis-ci.org/jguido/php-collections)
+[![Build Status](https://travis-ci.org/jguido/php-collections.svg?branch=master)](https://travis-ci.org/jguido/php-collections)  [![SensioLabsInsight](https://insight.sensiolabs.com/projects/c72f04ba-2f0a-4a18-8fe3-57e25af50a54/mini.png)](https://insight.sensiolabs.com/projects/c72f04ba-2f0a-4a18-8fe3-57e25af50a54)
 
 ## Map
 A Map will contain tuples of data indexed by a hash (if tuple is an object) or by a numerical index based on the next numerical free index.

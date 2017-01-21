@@ -122,6 +122,4 @@ abstract class BaseCollection implements CollectionInterface
 
         return $return;
     }
-
-
 }

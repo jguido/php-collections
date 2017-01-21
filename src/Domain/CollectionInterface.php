@@ -69,5 +69,5 @@ interface CollectionInterface
     /**
      * @return CollectionInterface
      */
-    function __clone();
+    public function __clone();
 }

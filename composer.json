@@ -1,6 +1,6 @@
 {
   "name": "jguido/php-collections",
-  "license": "BSD-2.0",
+  "license": "GNU",
   "type": "library",
   "description": "Collection feature for php",
   "autoload": {

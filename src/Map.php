@@ -129,7 +129,7 @@ class Map extends BaseCollection  {
     /**
      * @return CollectionInterface
      */
-    function __clone()
+    public function __clone()
     {
         return new Map($this->dataset);
     }
