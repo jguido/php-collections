@@ -1,6 +1,6 @@
 {
   "name": "jguido/php-collections",
-  "license": "GNU",
+  "license": "MIT",
   "type": "library",
   "description": "Collection feature for php",
   "autoload": {
